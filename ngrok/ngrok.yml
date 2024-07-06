@@ -1,0 +1,11 @@
+version: "2"
+authtoken: 2fkKCr3bYJe7UChw9NJfcKnYdne_QU9b2xaSLkhZxJsN4EBq
+
+tunnels:
+  website:
+    addr: 80
+    schemes:
+      - https
+    inspect: false
+    proto: http
+    domain: super-magpie-busy.ngrok-free.app

@@ -1,0 +1,22 @@
+[Unit]
+Description=LAC Integration Manager Processing Service
+After=rabbitmq-server.service
+
+[Service]
+WorkingDirectory=/srv/i2f-customer-processing-service
+ExecStart=/usr/bin/dotnet /srv/lac-integration-manager-processing-service/TequaCreek.LACIntegrationManagerProcessingService.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=lac-integration-manager-processing-service
+User=webdeployrunuser
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+Environment=LAC_DATABASE_USERNAME=<value_set_in_production_environment>
+Environment=LAC_DATABASE_PASSWORD=<value_set_in_production_environment>
+Environment=LAC_TRIGGER_MESSAGE_QUEUE_USER_NAME=<value_set_in_production_environment>
+Environment=LAC_TRIGGER_MESSAGE_QUEUE_PASSWORD=<value_set_in_production_environment>
+
+[Install]
+WantedBy=multi-user.target

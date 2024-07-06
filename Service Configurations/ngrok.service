@@ -1,0 +1,12 @@
+[Unit]
+Description=Ngrok
+After=network.service
+
+[Service]
+User=root
+WorkingDirectory=/var/www
+ExecStart=/usr/local/bin/ngrok start --all --config="/var/www/ngrok.yml"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

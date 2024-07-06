@@ -1,0 +1,23 @@
+[Unit]
+Description=LAC Web Service Callback Receiver
+After=postgresql.service
+
+[Service]
+WorkingDirectory=/var/www/lac-ws-callback-receiver
+ExecStart=/usr/bin/dotnet /var/www/lac-ws-callback-receiver/TequaCreek.LACWebServicesCallbackReceiver.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=lac-ws-callback-receiver
+User=webdeployrunuser
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+Environment=ASPNETCORE_URLS=http://localhost:5002
+Environment=LAC_DATABASE_USERNAME=<value_set_in_production_environment>
+Environment=LAC_DATABASE_PASSWORD=<value_set_in_production_environment>
+Environment=LAC_TRIGGER_MESSAGE_QUEUE_USER_NAME=<value_set_in_production_environment>
+Environment=LAC_TRIGGER_MESSAGE_QUEUE_PASSWORD=<value_set_in_production_environment>
+
+[Install]
+WantedBy=multi-user.target
