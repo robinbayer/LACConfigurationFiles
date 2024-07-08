@@ -1,6 +1,7 @@
 ALTER DEFAULT PRIVILEGES IN SCHEMA utilities GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO lacprocessuser;
 ALTER DEFAULT PRIVILEGES IN SCHEMA integration GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO lacprocessuser;
 
+// TEMP CODE
 CREATE TABLE IF NOT EXISTS utilities.prior_member
 (
     prior_member_internal_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
@@ -9,9 +10,12 @@ CREATE TABLE IF NOT EXISTS utilities.prior_member
     account_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
     lac_membership_start_date timestamp without time zone NOT NULL,
     lac_membership_end_date timestamp without time zone,
-    sf_id character varying(18) COLLATE pg_catalog."default" NOT NULL,
+    salesforce_id character varying(18) COLLATE pg_catalog."default" NOT NULL,
     lac_membership_level character varying(50) COLLATE pg_catalog."default",
+    superseded_salesforce_id character varying(18) COLLATE pg_catalog."default" NOT NULL,
+    membership_level_code integer NOT NULL,
     record_processing_status_code integer NOT NULL,
+    work_queue_id integer NOT NULL,
     CONSTRAINT prior_member_pkey PRIMARY KEY (prior_member_internal_id)
 )
 
@@ -19,6 +23,35 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS utilities.prior_member
     OWNER to postgres;
+// END TEMP CODE
+
+
+CREATE TABLE IF NOT EXISTS integration.membership_level
+(
+    membership_level_code integer NOT NULL,
+    description character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    active boolean NOT NULL,
+    CONSTRAINT membership_level_pkey PRIMARY KEY (membership_level_code)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS integration.membership_level
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS integration.membership_status
+(
+    membership_status_code integer NOT NULL,
+    description character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT membership_status_pkey PRIMARY KEY (membership_status_code)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS integration.membership_status
+    OWNER to postgres;
+
+
 
 CREATE TABLE IF NOT EXISTS integration.website_user
 (
