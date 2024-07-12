@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS utilities.prior_member
     salesforce_id character varying(18) COLLATE pg_catalog."default" NOT NULL,
     lac_membership_level character varying(50) COLLATE pg_catalog."default",
     superseded_salesforce_id character varying(18) COLLATE pg_catalog."default" NOT NULL,
+    email_address character varying(50) COLLATE pg_catalog."default",
     membership_level_code integer NOT NULL,
     record_processing_status_code integer NOT NULL,
     work_queue_id integer NOT NULL,
