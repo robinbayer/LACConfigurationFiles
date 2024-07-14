@@ -1,11 +1,13 @@
 version: "2"
-authtoken: 2fkKCr3bYJe7UChw9NJfcKnYdne_QU9b2xaSLkhZxJsN4EBq
+authtoken: <set in production environment>
 
 tunnels:
   website:
     addr: 80
+    basic_auth: 
+      - "<set uid in prod environment>:<set pwd in prod environment>"
     schemes:
       - https
     inspect: false
     proto: http
-    domain: super-magpie-busy.ngrok-free.app
+    domain: tequacreek.ngrok.io
