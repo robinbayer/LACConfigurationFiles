@@ -74,3 +74,61 @@ ALTER TABLE IF EXISTS integration.website_user
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA utilities TO lacprocessuser;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA integration TO lacprocessuser;
+
+CREATE TABLE IF NOT EXISTS customer.customer
+(
+    customer_internal_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    customer_external_id character varying(32) COLLATE pg_catalog."default" NOT NULL,
+    idp_customer_external_id character varying(32) COLLATE pg_catalog."default",
+    email_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    email_address_verified boolean NOT NULL,
+    email_verification_code character varying(32) COLLATE pg_catalog."default",
+    last_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    first_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    ecp_customer_external_id character varying(32) COLLATE pg_catalog."default",
+    record_added_date_time timestamp without time zone NOT NULL,
+    record_last_updated_date_time timestamp without time zone NOT NULL,
+    CONSTRAINT customer_pkey PRIMARY KEY (customer_internal_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS customer.customer
+    OWNER to postgres;
+
+CREATE INDEX idx_customer ON customer.customer (customer_external_id);
+CREATE INDEX idx2_customer ON customer.customer (email_address);
+CREATE INDEX idx3_customer ON customer.customer (idp_customer_external_id);
+CREATE INDEX idx4_customer ON customer.customer (ecp_customer_external_id);
+
+CREATE TABLE IF NOT EXISTS session.customer_session
+(
+    customer_session_internal_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    customer_session_external_id character varying(32) COLLATE pg_catalog."default" NOT NULL,
+    request_ip_address character varying(15),
+    customer_internal_id integer,
+    ecp_cart_external_id character varying(32) COLLATE pg_catalog."default",
+    cookies_accepted boolean,
+    email_address_verified boolean,
+    idp_session_expiration_date_time timestamp without time zone,
+    ecp_session_expiration_date_time timestamp without time zone,
+    record_created_date_time timestamp without time zone NOT NULL,
+    record_last_updated_date_time timestamp without time zone NOT NULL,
+    valid_until_date_time timestamp without time zone NOT NULL,
+    CONSTRAINT customer_session_pkey PRIMARY KEY (customer_session_internal_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS session.customer_session
+    OWNER to postgres;
+
+CREATE INDEX idx_customer_session ON customer.customer_session (customer_session_external_id);
+CREATE INDEX idx2_customer_session ON customer.customer_session (customer_internal_id);
+CREATE INDEX idx3_customer_session ON customer.customer_session (valid_until_date_time);
+
+ALTER TABLE session.customer_session
+    ADD CONSTRAINT fk_customer_session_customer 
+	FOREIGN KEY (customer_internal_id) REFERENCES customer.customer (customer_internal_id);
+
+
